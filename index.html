@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quadri Balogun | Data & Product Analyst</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #141820;
+      --surface2: #1b2030;
+      --border: #242b3d;
+      --teal: #00e5c8;
+      --teal-dim: #00b8a0;
+      --teal-glow: rgba(0,229,200,0.12);
+      --amber: #f5a623;
+      --red: #ff4d6d;
+      --white: #f0f4ff;
+      --muted: #7a8aaa;
+      --faint: #3a4560;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Manrope', sans-serif;
+      --display: 'Syne', sans-serif;
+      --radius: 6px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--white); overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--teal-dim); border-radius: 2px; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 5%;
+      background: rgba(13,15,20,0.97);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo { font-family: var(--mono); font-size: .95rem; font-weight: 700; color: var(--teal); letter-spacing: 2px; text-decoration: none; }
+    .nav-logo span { color: var(--muted); }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: .72rem; color: var(--muted); text-decoration: none; letter-spacing: 1px; transition: color .2s; }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-cta { font-family: var(--mono); font-size: .72rem; font-weight: 700; color: var(--bg); background: var(--teal); padding: .45rem 1.1rem; border-radius: var(--radius); text-decoration: none; letter-spacing: 1px; transition: all .2s; }
+    .nav-cta:hover { background: var(--teal-dim); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--teal); }
+    .mobile-menu { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 200; flex-direction: column; justify-content: center; align-items: center; gap: 2.5rem; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: var(--display); font-size: 1.8rem; font-weight: 700; color: var(--white); text-decoration: none; transition: color .2s; }
+    .mobile-menu a:hover { color: var(--teal); }
+    .mobile-close { position: absolute; top: 1.5rem; right: 5%; background: none; border: none; color: var(--teal); font-size: 2rem; cursor: pointer; }
+
+    /* HERO */
+    #home {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 0 5%; position: relative; overflow: hidden;
+    }
+    #home::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px; opacity: .3; pointer-events: none;
+    }
+    #home::after {
+      content: ''; position: absolute; width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(0,229,200,0.07) 0%, transparent 70%);
+      top: 50%; left: 60%; transform: translate(-50%,-50%); pointer-events: none;
+    }
+    .hero-content { max-width: 820px; padding-top: 5rem; position: relative; z-index: 1; }
+    .hero-tag { font-family: var(--mono); font-size: .72rem; color: var(--teal); letter-spacing: 2px; margin-bottom: 1.4rem; }
+    .hero-tag::before { content: '> '; color: var(--faint); }
+    .hero-name { font-family: var(--display); font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.0; color: var(--white); }
+    .hero-name .teal { color: var(--teal); }
+    .hero-role { font-family: var(--mono); font-size: clamp(.78rem, 1.4vw, .95rem); color: var(--muted); margin-top: 1.2rem; letter-spacing: 1px; }
+    .hero-desc { font-size: .97rem; line-height: 1.85; color: #4a5a78; margin-top: 1.2rem; max-width: 620px; }
+    .hero-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+    .btn-teal { background: var(--teal); color: var(--bg); padding: .75rem 2rem; font-family: var(--mono); font-size: .78rem; font-weight: 700; letter-spacing: 1px; border: none; border-radius: var(--radius); cursor: pointer; text-decoration: none; transition: all .2s; }
+    .btn-teal:hover { background: var(--teal-dim); transform: translateY(-2px); }
+    .btn-ghost { background: transparent; color: var(--teal); padding: .75rem 2rem; font-family: var(--mono); font-size: .78rem; font-weight: 700; letter-spacing: 1px; border: 1px solid var(--teal); border-radius: var(--radius); cursor: pointer; text-decoration: none; transition: all .2s; }
+    .btn-ghost:hover { background: var(--teal-glow); }
+    .hero-pills { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1.8rem; }
+    .pill { font-family: var(--mono); font-size: .65rem; padding: .28rem .75rem; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); }
+    .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2.5rem; }
+    .hstat { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; background: var(--surface); }
+    .hstat-num { font-family: var(--display); font-size: 1.7rem; font-weight: 800; color: var(--teal); }
+    .hstat-label { font-family: var(--mono); font-size: .6rem; color: var(--muted); margin-top: .3rem; letter-spacing: 1px; }
+
+    /* SECTIONS */
+    section { padding: 5.5rem 5%; }
+    .chip { font-family: var(--mono); font-size: .62rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--teal); border: 1px solid rgba(0,229,200,.3); padding: .22rem .75rem; border-radius: 20px; display: inline-block; margin-bottom: .9rem; }
+    .section-title { font-family: var(--display); font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; color: var(--white); line-height: 1.15; }
+    .title-accent { color: var(--teal); }
+    .section-line { width: 40px; height: 2px; background: var(--teal); margin-top: .6rem; margin-bottom: .3rem; }
+
+    /* ABOUT */
+    #about { background: var(--surface); }
+    .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 4rem; align-items: start; margin-top: 2.5rem; }
+    .about-text p { font-size: .95rem; line-height: 1.9; color: var(--muted); margin-bottom: 1rem; }
+    .about-meta { margin-top: 1.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+    .meta-item { padding: .8rem; background: var(--surface2); border-radius: var(--radius); border: 1px solid var(--border); }
+    .meta-key { font-family: var(--mono); font-size: .62rem; color: var(--faint); letter-spacing: 1px; margin-bottom: .3rem; }
+    .meta-val { font-size: .88rem; font-weight: 600; color: var(--white); }
+    .competencies { display: flex; flex-direction: column; gap: .8rem; }
+    .comp-item { padding: 1rem 1.2rem; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); border-left: 3px solid var(--teal); transition: transform .2s; }
+    .comp-item:hover { transform: translateX(5px); }
+    .comp-title { font-family: var(--mono); font-size: .75rem; font-weight: 700; color: var(--teal); }
+    .comp-sub { font-size: .8rem; color: var(--muted); margin-top: .3rem; }
+
+    /* EXPERIENCE */
+    #experience { background: var(--bg); }
+    .exp-timeline { margin-top: 2.5rem; position: relative; padding-left: 2rem; }
+    .exp-timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: var(--border); }
+    .exp-item { position: relative; margin-bottom: 2.5rem; }
+    .exp-item::before { content: ''; position: absolute; left: -2.38rem; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal); }
+    .exp-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.8rem 2rem; transition: border-color .2s; }
+    .exp-card:hover { border-color: rgba(0,229,200,.4); }
+    .exp-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .exp-role { font-family: var(--display); font-size: 1.05rem; font-weight: 700; color: var(--white); }
+    .exp-company { font-family: var(--mono); font-size: .72rem; color: var(--teal); margin-top: .25rem; }
+    .exp-period { font-family: var(--mono); font-size: .68rem; color: var(--faint); border: 1px solid var(--border); padding: .22rem .7rem; border-radius: 20px; white-space: nowrap; }
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
+    .exp-bullets li { font-size: .88rem; line-height: 1.75; color: var(--muted); padding-left: 1.3rem; position: relative; }
+    .exp-bullets li::before { content: '//'; position: absolute; left: 0; color: var(--teal); font-family: var(--mono); font-size: .65rem; top: .22rem; }
+    .exp-bullets li strong { color: #a0c0d8; font-weight: 600; }
+
+    /* SKILLS */
+    #skills { background: var(--surface); }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+    .skill-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    .skill-card-head { display: flex; align-items: center; gap: .7rem; margin-bottom: 1.2rem; }
+    .skill-icon { width: 32px; height: 32px; border-radius: 6px; background: var(--teal-glow); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: .7rem; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+    .skill-card-title { font-family: var(--display); font-size: .9rem; font-weight: 700; color: var(--white); }
+    .skill-bars { display: flex; flex-direction: column; gap: .75rem; }
+    .skill-bar-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .65rem; color: var(--muted); margin-bottom: .3rem; }
+    .skill-bar-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .skill-bar-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-dim)); border-radius: 2px; transition: width 1.4s cubic-bezier(.4,0,.2,1); }
+
+    /* PROJECTS */
+    #projects { background: var(--bg); }
+    .proj-tabs { display: flex; gap: .5rem; margin-top: 2rem; flex-wrap: wrap; }
+    .proj-tab { font-family: var(--mono); font-size: .7rem; font-weight: 700; letter-spacing: 1px; padding: .45rem 1.1rem; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .2s; }
+    .proj-tab.active { background: var(--teal); color: var(--bg); border-color: var(--teal); }
+    .proj-tab:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
+    .proj-panel { display: none; margin-top: 2rem; animation: fadeIn .3s ease; }
+    .proj-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .proj-name { font-family: var(--display); font-size: 1.35rem; font-weight: 800; color: var(--white); }
+    .proj-sub { font-family: var(--mono); font-size: .72rem; color: var(--muted); margin-top: .4rem; }
+    .proj-tags { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .7rem; }
+    .ptag { font-family: var(--mono); font-size: .62rem; padding: .2rem .65rem; border-radius: 20px; border: 1px solid; }
+    .ptag.sql { color: var(--teal); border-color: rgba(0,229,200,.35); }
+    .ptag.python { color: var(--amber); border-color: rgba(245,166,35,.35); }
+    .ptag.bi { color: #a78bfa; border-color: rgba(167,139,250,.35); }
+    .ptag.stat { color: var(--red); border-color: rgba(255,77,109,.35); }
+    .proj-insight { background: var(--surface); border-left: 3px solid var(--teal); padding: 1rem 1.2rem; font-size: .85rem; color: var(--muted); line-height: 1.75; margin: 1.2rem 0; border-radius: 0 6px 6px 0; }
+    .proj-insight strong { color: var(--white); }
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; text-align: center; }
+    .kpi-val { font-family: var(--display); font-size: 1.5rem; font-weight: 800; color: var(--teal); }
+    .kpi-label { font-family: var(--mono); font-size: .6rem; color: var(--muted); margin-top: .3rem; letter-spacing: .5px; }
+    .kpi-note { font-family: var(--mono); font-size: .62rem; margin-top: .35rem; color: #4caf90; }
+    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
+    .chart-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; }
+    .chart-box.full { grid-column: 1 / -1; }
+    .chart-box-title { font-family: var(--mono); font-size: .65rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 1rem; }
+    .controls-row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: 1.2rem; }
+    .ctrl-label { font-family: var(--mono); font-size: .65rem; color: var(--faint); letter-spacing: 1px; margin-right: .3rem; }
+    .ctrl-btn { font-family: var(--mono); font-size: .65rem; font-weight: 700; padding: .28rem .75rem; border-radius: 20px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all .2s; }
+    .ctrl-btn.active { background: var(--teal); color: var(--bg); border-color: var(--teal); }
+    .ctrl-btn:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
+    .scenario-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.2rem; }
+    .scenario-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; cursor: pointer; background: var(--surface); transition: all .2s; }
+    .scenario-card:hover, .scenario-card.active { border-color: var(--teal); background: var(--teal-glow); }
+    .scenario-card-name { font-family: var(--mono); font-size: .75rem; font-weight: 700; color: var(--white); }
+    .scenario-card-desc { font-size: .78rem; color: var(--muted); margin-top: .3rem; line-height: 1.5; }
+    .risk-matrix { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: .5rem; }
+    .risk-cell { aspect-ratio: 1; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: .58rem; font-weight: 700; cursor: pointer; transition: transform .15s; padding: 2px; line-height: 1.1; text-align: center; }
+    .risk-cell:hover { transform: scale(1.1); }
+    .risk-low { background: rgba(22,163,74,.15); color: #4ade80; border: 1px solid rgba(22,163,74,.3); }
+    .risk-med { background: rgba(245,166,35,.15); color: var(--amber); border: 1px solid rgba(245,166,35,.3); }
+    .risk-high { background: rgba(255,77,109,.18); color: var(--red); border: 1px solid rgba(255,77,109,.4); }
+    .risk-critical { background: rgba(255,77,109,.4); color: #fff; border: 1px solid var(--red); }
+    .risk-legend { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: .6rem; }
+    .risk-legend-item { display: flex; align-items: center; gap: .3rem; font-family: var(--mono); font-size: .6rem; color: var(--muted); }
+    .risk-legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+    .axis-lbl { font-family: var(--mono); font-size: .58rem; color: var(--faint); }
+
+    /* EDUCATION */
+    #education { background: var(--surface); }
+    .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+    .edu-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.8rem; }
+    .edu-degree { font-family: var(--display); font-size: 1rem; font-weight: 700; color: var(--white); }
+    .edu-school { font-family: var(--mono); font-size: .7rem; color: var(--teal); margin-top: .4rem; }
+    .edu-year { font-family: var(--mono); font-size: .65rem; color: var(--faint); margin-top: .2rem; }
+    .edu-note { font-size: .83rem; color: var(--muted); margin-top: .8rem; line-height: 1.65; padding-top: .8rem; border-top: 1px solid var(--border); }
+    .edu-badge { display: inline-block; background: rgba(0,229,200,.1); color: var(--teal); font-family: var(--mono); font-size: .62rem; padding: .2rem .6rem; border-radius: 20px; margin-top: .6rem; border: 1px solid rgba(0,229,200,.3); }
+    .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .cert-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; transition: border-color .2s; }
+    .cert-card:hover { border-color: rgba(0,229,200,.4); }
+    .cert-name { font-size: .88rem; font-weight: 600; color: var(--white); }
+    .cert-by { font-family: var(--mono); font-size: .65rem; color: var(--faint); margin-top: .3rem; }
+
+    /* CONTACT */
+    #contact { background: var(--bg); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2.5rem; align-items: start; }
+    .contact-intro { font-size: .93rem; line-height: 1.85; color: var(--muted); margin-bottom: 1.8rem; }
+    .contact-items { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-item { display: flex; align-items: center; gap: .9rem; }
+    .contact-icon { width: 40px; height: 40px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: .7rem; color: var(--teal); flex-shrink: 0; }
+    .contact-lbl { font-family: var(--mono); font-size: .62rem; color: var(--faint); letter-spacing: 1px; }
+    .contact-val { font-size: .9rem; font-weight: 600; color: var(--white); margin-top: .15rem; }
+    .contact-val a { color: inherit; text-decoration: none; }
+    .contact-val a:hover { color: var(--teal); }
+    .contact-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-family: var(--mono); font-size: .62rem; color: var(--faint); letter-spacing: 1.5px; margin-bottom: .4rem; text-transform: uppercase; }
+    .form-group input, .form-group textarea { width: 100%; padding: .72rem 1rem; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--sans); font-size: .9rem; color: var(--white); outline: none; transition: border-color .2s; resize: vertical; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--teal); }
+    .form-group textarea { min-height: 110px; }
+    .form-submit { width: 100%; background: var(--teal); color: var(--bg); border: none; padding: .85rem; font-family: var(--mono); font-size: .78rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; border-radius: var(--radius); transition: all .2s; }
+    .form-submit:hover { background: var(--teal-dim); }
+
+    /* FOOTER */
+    footer { background: var(--surface); border-top: 1px solid var(--border); text-align: center; padding: 1.8rem 5%; font-family: var(--mono); font-size: .7rem; color: var(--faint); }
+    footer span { color: var(--teal); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 4rem 5%; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .chart-row { grid-template-columns: 1fr; }
+      .scenario-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">QB<span>.data</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:quadribalogun70@gmail.com" class="nav-cta">HIRE ME</a>
+  <button class="hamburger" onclick="openMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMenu()">✕</button>
+  <a href="#home" onclick="closeMenu()">Home</a>
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#experience" onclick="closeMenu()">Experience</a>
+  <a href="#skills" onclick="closeMenu()">Skills</a>
+  <a href="#projects" onclick="closeMenu()">Projects</a>
+  <a href="#education" onclick="closeMenu()">Education</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-content">
+    <div class="hero-tag">data_analyst | product_analytics | decision_science</div>
+    <h1 class="hero-name">Quadri<br><span class="teal">Balogun</span></h1>
+    <p class="hero-role"> EY Data &amp; Analytics Consultant &nbsp;·&nbsp; SQL &nbsp;·&nbsp; Python &nbsp;·&nbsp; Power BI &nbsp;·&nbsp; Tableau</p>
+    <p class="hero-desc">Data &amp; Product Analyst with 3+ years at Ernst &amp; Young, turning complex datasets into clear business decisions. Automating workflows, building data pipelines, and delivering insights that drive operational efficiency and revenue growth across Nigeria's financial services sector.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-teal">VIEW PROJECTS</a>
+      <a href="#contact" class="btn-ghost">GET IN TOUCH</a>
+    </div>
+    <div class="hero-pills">
+      <span class="pill">SQL (Advanced)</span>
+      <span class="pill">Python · Pandas · NumPy</span>
+      <span class="pill">Power BI</span>
+      <span class="pill">Tableau</span>
+      <span class="pill">Statistical Modelling</span>
+      <span class="pill">IFRS 17</span>
+      <span class="pill">ERM Frameworks</span>
+      <span class="pill">Excel VBA</span>
+      <span class="pill">Decision Science</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num">3+</div><div class="hstat-label">YRS AT EY</div></div>
+      <div class="hstat"><div class="hstat-num">26%</div><div class="hstat-label">FASTER REPORTING</div></div>
+      <div class="hstat"><div class="hstat-num">10+</div><div class="hstat-label">CLIENTS SERVED</div></div>
+      <div class="hstat"><div class="hstat-num">339</div><div class="hstat-label">GRE SCORE</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="chip">// about_me</div>
+  <div class="section-title">About <span class="title-accent">Me</span></div>
+  <div class="section-line"></div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a Data &amp; Product Analyst with over three years at Ernst &amp; Young, where I translate complex datasets and actuarial models into clear, executive-ready insights that drive strategic decisions across Nigeria's financial services sector.</p>
+      <p>My work spans the full analytics stack — from writing advanced SQL queries and building Python data pipelines, to designing interactive Power BI and Tableau dashboards and statistical risk models. I've collaborated closely with Cards, Decision Science, and Data Warehouse teams to align analytical outputs with business priorities.</p>
+      <p>My ambition is to grow into product analytics and decision science roles where data shapes product strategy and user outcomes at scale.</p>
+      <div class="about-meta">
+        <div class="meta-item"><div class="meta-key">LOCATION</div><div class="meta-val">Lagos, Nigeria</div></div>
+        <div class="meta-item"><div class="meta-key">PHONE</div><div class="meta-val">+234 905 940 7019</div></div>
+        <div class="meta-item"><div class="meta-key">EMAIL</div><div class="meta-val">quadribalogun70@gmail.com</div></div>
+        <div class="meta-item"><div class="meta-key">GRE SCORE</div><div class="meta-val">339 / 340</div></div>
+      </div>
+    </div>
+    <div class="competencies">
+      <div class="comp-item"><div class="comp-title">SQL &amp; Python Analytics</div><div class="comp-sub">Advanced queries, pandas, numpy, data wrangling at scale</div></div>
+      <div class="comp-item"><div class="comp-title">Data Visualisation</div><div class="comp-sub">Power BI, Tableau, Excel — executive-ready dashboard design</div></div>
+      <div class="comp-item"><div class="comp-title">Statistical &amp; Risk Modelling</div><div class="comp-sub">ERM frameworks, IFRS 17 reporting, actuarial data pipelines</div></div>
+      <div class="comp-item"><div class="comp-title">Automated Reporting &amp; Pipelines</div><div class="comp-sub">VBA macros, standardised pipelines, audit-ready documentation</div></div>
+      <div class="comp-item"><div class="comp-title">Product &amp; Business Analytics</div><div class="comp-sub">Decision science, stakeholder communication, cross-functional collaboration</div></div>
+      <div class="comp-item"><div class="comp-title">IFRS 17 / Regulatory Reporting</div><div class="comp-sub">Valuation reports, GAP analyses, regulatory filings at scale</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="chip">// work_experience</div>
+  <div class="section-title">Work <span class="title-accent">Experience</span></div>
+  <div class="section-line"></div>
+  <div class="exp-timeline">
+
+    <div class="exp-item">
+      <div class="exp-card">
+        <div class="exp-top">
+          <div>
+            <div class="exp-role">Semi-Senior Associate — Data &amp; Analytics Consulting</div>
+            <div class="exp-company"> Ernst &amp; Young (EY) &nbsp;·&nbsp; Global Professional Services</div>
+          </div>
+          <div class="exp-period">AUG 2024 – JUL 2025</div>
+        </div>
+        <ul class="exp-bullets">
+          <li>Engineered automated Excel/VBA macros and standardised reporting pipelines, reducing data collection turnaround time by <strong>26%</strong> and improving cross-team reporting consistency across 10+ client engagements.</li>
+          <li>Built and maintained data-driven actuarial and risk documentation — IFRS 17 valuation reports, GAP analyses, regulatory filings — ensuring data integrity at scale and full audit readiness.</li>
+          <li>Designed and delivered financial impact dashboards for ORSA assessments, surfacing actionable client risk insights that drove a <strong>12% improvement in operational efficiency</strong>.</li>
+          <li>Leveraged advanced Excel functions (VBA, pivot tables, dynamic arrays) to streamline actuarial data workflows, cutting processing time by <strong>20%</strong> and freeing analyst capacity for higher-value analysis.</li>
+          <li>Mentored 2+ junior analysts and standardised data processes across the team, reducing onboarding time by <strong>18%</strong> and improving overall workflow efficiency by 15%.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-card">
+        <div class="exp-top">
+          <div>
+            <div class="exp-role">Associate — Data &amp; Analytics Consulting</div>
+            <div class="exp-company">// Ernst &amp; Young (EY) &nbsp;·&nbsp; Global Professional Services</div>
+          </div>
+          <div class="exp-period">MAY 2022 – JUL 2024</div>
+        </div>
+        <ul class="exp-bullets">
+          <li>Conducted quantitative financial and risk impact analyses across 10+ insurance firms, reducing projected risk exposures by <strong>20%</strong> through data-backed mitigation strategies.</li>
+          <li>Translated complex actuarial models and datasets into clear, visual executive-ready recommendations, directly influencing regulatory compliance and strategic resource allocation decisions.</li>
+          <li>Led business performance reviews using data to identify operational inefficiencies, delivering a <strong>15% productivity increase</strong> and guiding leadership decisions on resource strategy.</li>
+          <li>Designed enterprise risk management (ERM) frameworks supported by structured data pipelines, achieving a <strong>10% reduction in unmitigated risk exposures</strong> across key business units.</li>
+          <li>Partnered with 3+ senior managers across Cards, Decision Science, and Data Warehouse functions to align analytical outputs with business priorities and reporting standards.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="chip">// tech_stack</div>
+  <div class="section-title">Technical <span class="title-accent">Skills</span></div>
+  <div class="section-line"></div>
+  <div class="skills-grid">
+
+    <div class="skill-card">
+      <div class="skill-card-head"><div class="skill-icon">SQL</div><div class="skill-card-title">Query Languages</div></div>
+      <div class="skill-bars">
+        <div><div class="skill-bar-label"><span>SQL (Advanced)</span><span>95%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div></div>
+        <div><div class="skill-bar-label"><span>Python · Pandas</span><span>80%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div></div>
+        <div><div class="skill-bar-label"><span>NumPy</span><span>75%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-head"><div class="skill-icon">BI</div><div class="skill-card-title">BI &amp; Visualisation</div></div>
+      <div class="skill-bars">
+        <div><div class="skill-bar-label"><span>Power BI</span><span>90%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+        <div><div class="skill-bar-label"><span>Tableau</span><span>85%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div></div>
+        <div><div class="skill-bar-label"><span>Excel (VBA)</span><span>95%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-head"><div class="skill-icon">∑</div><div class="skill-card-title">Analytics &amp; Modelling</div></div>
+      <div class="skill-bars">
+        <div><div class="skill-bar-label"><span>Statistical Modelling</span><span>85%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div></div>
+        <div><div class="skill-bar-label"><span>ERM Frameworks</span><span>90%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+        <div><div class="skill-bar-label"><span>IFRS 17 Reporting</span><span>88%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-head"><div class="skill-icon">⚙</div><div class="skill-card-title">Process &amp; Workflow</div></div>
+      <div class="skill-bars">
+        <div><div class="skill-bar-label"><span>Data Pipelines</span><span>82%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%"></div></div></div>
+        <div><div class="skill-bar-label"><span>Automated Reporting</span><span>92%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div></div>
+        <div><div class="skill-bar-label"><span>Stakeholder Comms</span><span>90%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="chip">// projects</div>
+  <div class="section-title">Analytics <span class="title-accent">Projects</span></div>
+  <div class="section-line"></div>
+  <p style="margin-top:.8rem;font-size:.9rem;color:var(--muted);max-width:680px;line-height:1.8;">Three interactive case studies replicating real analytical work at EY — from SQL-powered risk pipelines and dashboard design to product funnel analysis and operational efficiency modelling.</p>
+
+  <div class="proj-tabs">
+    <button class="proj-tab active" onclick="switchProj('pipeline',this)">Risk Data Pipeline</button>
+    <button class="proj-tab" onclick="switchProj('product',this)">Product Funnel Analysis</button>
+    <button class="proj-tab" onclick="switchProj('ops',this)">Efficiency Dashboard</button>
+  </div>
+
+  <!-- P1: Risk Data Pipeline -->
+  <div class="proj-panel active" id="proj-pipeline">
+    <div class="proj-name">Insurance Risk Data Pipeline &amp; Dashboard</div>
+    <div class="proj-sub">// SQL · Python · Power BI · IFRS 17 · ERM</div>
+    <div class="proj-tags">
+      <span class="ptag sql">SQL</span><span class="ptag python">Python</span><span class="ptag bi">Power BI</span><span class="ptag stat">Risk Modelling</span>
+    </div>
+    <div class="proj-insight"><strong>Context:</strong> Replicates actuarial data pipelines and ORSA dashboards built at EY — processing raw policy and claims data through SQL transformations, Python risk-scoring, and exposure visualisation across a fictional Nigerian composite insurer. Drove a 12% efficiency improvement in practice.</div>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val" id="p1k1">₦2.4B</div><div class="kpi-label">TOTAL EXPOSURE</div><div class="kpi-note">↓ 10% post-mitigation</div></div>
+      <div class="kpi-card"><div class="kpi-val">73%</div><div class="kpi-label">RISKS MITIGATED</div><div class="kpi-note">↑ 8pts YoY</div></div>
+      <div class="kpi-card"><div class="kpi-val" id="p1k3">142%</div><div class="kpi-label">SOLVENCY RATIO</div><div class="kpi-note">Reg. minimum: 100%</div></div>
+      <div class="kpi-card"><div class="kpi-val">4</div><div class="kpi-label">CRITICAL FLAGS</div><div class="kpi-note">↓ 2 resolved this period</div></div>
+    </div>
+
+    <div class="controls-row">
+      <span class="ctrl-label">Stress scenario:</span>
+      <button class="ctrl-btn active" onclick="setRisk('base',this)">Base Case</button>
+      <button class="ctrl-btn" onclick="setRisk('stress',this)">Oil Price Shock</button>
+      <button class="ctrl-btn" onclick="setRisk('severe',this)">Severe Stress</button>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-box">
+        <div class="chart-box-title">// risk_exposure_by_category.sql (₦bn)</div>
+        <div style="position:relative;height:240px;"><canvas id="riskBarC"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">// risk_heatmap — likelihood × impact</div>
+        <div style="display:flex;gap:5px;align-items:flex-start;">
+          <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--mono);font-size:.55rem;color:var(--faint);padding:6px 0;text-align:center;">IMPACT ↑</div>
+          <div style="flex:1;">
+            <div class="risk-matrix" id="riskMx"></div>
+            <div style="display:flex;justify-content:space-between;margin-top:3px;"><span class="axis-lbl">Low likelihood</span><span class="axis-lbl">High →</span></div>
+            <div class="risk-legend">
+              <div class="risk-legend-item"><div class="risk-legend-dot" style="background:rgba(22,163,74,.2);border:1px solid rgba(22,163,74,.5);"></div>Low</div>
+              <div class="risk-legend-item"><div class="risk-legend-dot" style="background:rgba(245,166,35,.2);border:1px solid rgba(245,166,35,.5);"></div>Medium</div>
+              <div class="risk-legend-item"><div class="risk-legend-dot" style="background:rgba(255,77,109,.2);border:1px solid var(--red);"></div>High</div>
+              <div class="risk-legend-item"><div class="risk-legend-dot" style="background:rgba(255,77,109,.5);"></div>Critical</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-box full">
+        <div class="chart-box-title">// capital_waterfall.py — pre vs post mitigation (₦bn)</div>
+        <div style="position:relative;height:210px;"><canvas id="waterfallC"></canvas></div>
+      </div>
+    </div>
+    <p style="font-family:var(--mono);font-size:.62rem;color:var(--faint);">* Illustrative. Modelled on ORSA methodology applied at EY across Nigerian insurers.</p>
+  </div>
+
+  <!-- P2: Product Funnel -->
+  <div class="proj-panel" id="proj-product">
+    <div class="proj-name">Insurance Product Funnel &amp; Cohort Analysis</div>
+    <div class="proj-sub">// SQL · Python · Tableau · Decision Science</div>
+    <div class="proj-tags">
+      <span class="ptag sql">SQL</span><span class="ptag python">Python</span><span class="ptag bi">Tableau</span><span class="ptag stat">Decision Science</span>
+    </div>
+    <div class="proj-insight"><strong>Context:</strong> Models the product analytics work done for insurance clients — tracking policy acquisition funnels, retention cohorts, and GWP trends using SQL cohort logic and Python segmentation. Insights guided a 15% productivity uplift and informed leadership's resource allocation strategy.</div>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val">34%</div><div class="kpi-label">FUNNEL CONVERSION</div><div class="kpi-note">↑ 6pts after optimisation</div></div>
+      <div class="kpi-card"><div class="kpi-val">71%</div><div class="kpi-label">12-MO RETENTION</div><div class="kpi-note">↑ 9pts YoY</div></div>
+      <div class="kpi-card"><div class="kpi-val">₦1.8B</div><div class="kpi-label">ANNUALISED GWP</div><div class="kpi-note">↑ 14% YoY growth</div></div>
+      <div class="kpi-card"><div class="kpi-val">4.2x</div><div class="kpi-label">LTV : CAC RATIO</div><div class="kpi-note">Industry avg: 2.8x</div></div>
+    </div>
+
+    <div class="controls-row">
+      <span class="ctrl-label">View:</span>
+      <button class="ctrl-btn active" onclick="setFunnel('funnel',this)">Acquisition Funnel</button>
+      <button class="ctrl-btn" onclick="setFunnel('retention',this)">Retention Cohorts</button>
+      <button class="ctrl-btn" onclick="setFunnel('revenue',this)">Revenue Mix</button>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-box full">
+        <div class="chart-box-title" id="funnelTitle">// acquisition_funnel.sql — policy stage conversion</div>
+        <div style="position:relative;height:280px;"><canvas id="funnelC"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">// segment_distribution.py — policy holders by tier</div>
+        <div style="position:relative;height:220px;"><canvas id="segC"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">// monthly_gwp_trend.sql — gross written premium (₦M)</div>
+        <div style="position:relative;height:220px;"><canvas id="gwpC"></canvas></div>
+      </div>
+    </div>
+    <p style="font-family:var(--mono);font-size:.62rem;color:var(--faint);">* Illustrative. Mirrors SQL cohort and funnel methods applied to EY insurance client work.</p>
+  </div>
+
+  <!-- P3: Efficiency -->
+  <div class="proj-panel" id="proj-ops">
+    <div class="proj-name">Operational Efficiency Analytics Dashboard</div>
+    <div class="proj-sub">// Excel VBA · Power BI · Python · Automated Reporting</div>
+    <div class="proj-tags">
+      <span class="ptag python">Python</span><span class="ptag bi">Power BI</span><span class="ptag sql">VBA Automation</span>
+    </div>
+    <div class="proj-insight"><strong>Context:</strong> Visualises the measurable efficiency gains delivered through data automation and workflow re-engineering at EY — including the 26% reporting turnaround improvement, 20% processing reduction, and 15% productivity increase across multiple client workstreams.</div>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val">26%</div><div class="kpi-label">FASTER REPORTING</div><div class="kpi-note">VBA macro automation</div></div>
+      <div class="kpi-card"><div class="kpi-val">20%</div><div class="kpi-label">LESS PROCESSING</div><div class="kpi-note">Dynamic array formulas</div></div>
+      <div class="kpi-card"><div class="kpi-val">15%</div><div class="kpi-label">PRODUCTIVITY UP</div><div class="kpi-note">Business performance reviews</div></div>
+      <div class="kpi-card"><div class="kpi-val">18%</div><div class="kpi-label">FASTER ONBOARDING</div><div class="kpi-note">Process standardisation</div></div>
+    </div>
+
+    <div class="controls-row">
+      <span class="ctrl-label">Workstream:</span>
+      <button class="ctrl-btn active" onclick="setOps('all',this)">All</button>
+      <button class="ctrl-btn" onclick="setOps('reporting',this)">Reporting</button>
+      <button class="ctrl-btn" onclick="setOps('risk',this)">Risk Data</button>
+      <button class="ctrl-btn" onclick="setOps('people',this)">People</button>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-box full">
+        <div class="chart-box-title">// before_after_efficiency.py — baseline vs post-intervention (%)</div>
+        <div style="position:relative;height:280px;"><canvas id="opsBarC"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">// cumulative_hours_saved — 12-month rollup</div>
+        <div style="position:relative;height:220px;"><canvas id="opsLineC"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">// automation_roi.py — return by intervention type (₦M)</div>
+        <div style="position:relative;height:220px;"><canvas id="opsRoiC"></canvas></div>
+      </div>
+    </div>
+    <p style="font-family:var(--mono);font-size:.62rem;color:var(--faint);">* Gains documented from EY client engagements. Hours estimated from actual turnaround improvements.</p>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="chip">// education</div>
+  <div class="section-title">Education &amp; <span class="title-accent">Certifications</span></div>
+  <div class="section-line"></div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-degree">B.Sc. Insurance</div>
+      <div class="edu-school">// University of Lagos, Nigeria</div>
+      <div class="edu-year">Graduated December 2021</div>
+      <div class="edu-note">Senior Project: Analysis of strategic options for managing risk in Nigeria's oil &amp; gas industry — combining quantitative modelling with strategic decision frameworks.</div>
+      <span class="edu-badge">Second Class Upper Honours</span>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Ordinary National Diploma</div>
+      <div class="edu-school">// Lagos State Polytechnic, Nigeria</div>
+      <div class="edu-year">Graduated September 2015</div>
+      <div class="edu-note">Assistant General Secretary — Actuarial Science &amp; Insurance Student Association of Nigeria (AISAN). Demonstrated early leadership and academic excellence in quantitative disciplines.</div>
+      <span class="edu-badge">Distinction</span>
+    </div>
+  </div>
+
+  <div style="margin-top:2.5rem;">
+    <div class="chip" style="margin-bottom:1rem;">// certifications_and_scores</div>
+    <div class="cert-grid">
+      <div class="cert-card"><div class="cert-name">Complete SQL Bootcamp 2022</div><div class="cert-by">// Udemy · Zero to Hero</div></div>
+      <div class="cert-card"><div class="cert-name">Microsoft Power BI Desktop for BI</div><div class="cert-by">// Udemy · 2023</div></div>
+      <div class="cert-card"><div class="cert-name">GRE: 339 / 340</div><div class="cert-by">// Verbal 169 · Quant 170 · AW 4.5</div></div>
+      <div class="cert-card"><div class="cert-name">"Teach 100 Nigerians" — EY Ripples</div><div class="cert-by">// Digital literacy &amp; data training volunteer</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="chip">// contact</div>
+  <div class="section-title">Get In <span class="title-accent">Touch</span></div>
+  <div class="section-line"></div>
+  <div class="contact-grid">
+    <div>
+      <p class="contact-intro">Open to data analyst, product analytics, and decision science opportunities — as well as consulting and advisory roles that leverage data to drive business strategy. Let's connect.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-icon">@</div>
+          <div><div class="contact-lbl">EMAIL</div><div class="contact-val"><a href="mailto:quadribalogun70@gmail.com">quadribalogun70@gmail.com</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">☎</div>
+          <div><div class="contact-lbl">PHONE</div><div class="contact-val">+234 905 940 7019</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">in</div>
+          <div><div class="contact-lbl">LINKEDIN</div><div class="contact-val"><a href="https://linkedin.com/in/balogun.quadri" target="_blank">linkedin.com/in/balogun.quadri</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div><div class="contact-lbl">LOCATION</div><div class="contact-val">Lagos, Nigeria</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <div class="form-group"><label>Name</label><input type="text" placeholder="Your name" /></div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com" /></div>
+      <div class="form-group"><label>Subject</label><input type="text" placeholder="Data Analyst Opportunity" /></div>
+      <div class="form-group"><label>Message</label><textarea placeholder="Tell me about the role or project..."></textarea></div>
+      <button class="form-submit" onclick="handleSubmit()">SEND_MESSAGE()</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>built_by(<span>quadri_balogun</span>) // data &amp; analytics portfolio // © 2026</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+  // NAV
+  function openMenu(){ document.getElementById('mobileMenu').classList.add('open'); }
+  function closeMenu(){ document.getElementById('mobileMenu').classList.remove('open'); }
+  const secs = document.querySelectorAll('section[id]');
+  const navAs = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', ()=>{
+    let cur='';
+    secs.forEach(s=>{ if(window.scrollY>=s.offsetTop-120) cur=s.id; });
+    navAs.forEach(a=>{ a.style.color=a.getAttribute('href')==='#'+cur?'var(--teal)':''; });
+  });
+
+  // CHART REGISTRY
+  const CI={};
+  function dc(id){ if(CI[id]){ CI[id].destroy(); delete CI[id]; } }
+
+  const T='#00e5c8', AM='#f5a623', RD='#ff4d6d', BL='#4da6ff', GR='#4ade80', MU='#7a8aaa', BD='#242b3d', S='#141820';
+  const MF={family:"'Space Mono',monospace",size:10};
+
+  function baseOpts(xCb,yCb){
+    return {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        x:{ grid:{color:BD}, ticks:{color:MU,font:MF, callback:xCb||undefined} },
+        y:{ grid:{color:BD}, ticks:{color:MU,font:MF, callback:yCb||undefined} }
+      }
+    };
+  }
+
+  // ── PROJECT 1 ──
+  const riskSc={
+    base:  {exp:[8.2,6.1,4.8,3.2,2.9,1.6], sol:142, tot:'2.4'},
+    stress:{exp:[11.4,8.7,6.2,4.1,3.8,2.4], sol:118, tot:'3.9'},
+    severe:{exp:[15.8,12.3,9.1,6.4,5.2,3.9], sol:103, tot:'5.7'}
+  };
+  const rLbls=['Market','Credit','Underwriting','Operational','Liquidity','Compliance'];
+
+  function initRisk(sc){
+    const d=riskSc[sc];
+    document.getElementById('p1k1').textContent='₦'+d.tot+'B';
+    document.getElementById('p1k3').textContent=d.sol+'%';
+    document.getElementById('p1k3').style.color=d.sol<115?RD:T;
+
+    dc('riskBarC');
+    CI['riskBarC']=new Chart(document.getElementById('riskBarC'),{
+      type:'bar',
+      data:{ labels:rLbls, datasets:[{
+        data:d.exp,
+        backgroundColor:d.exp.map(v=>v>8?RD+'40':v>5?AM+'40':GR+'30'),
+        borderColor:d.exp.map(v=>v>8?RD:v>5?AM:GR),
+        borderWidth:2, borderRadius:4
+      }]},
+      options:{...baseOpts(null,v=>'₦'+v+'B'), plugins:{legend:{display:false}}}
+    });
+
+    dc('waterfallC');
+    const g=d.exp.reduce((a,b)=>a+b,0);
+    const m=+(g*0.22).toFixed(1), n=+(g-m).toFixed(1), c=+(d.sol/100*n*0.8).toFixed(1);
+    CI['waterfallC']=new Chart(document.getElementById('waterfallC'),{
+      type:'bar',
+      data:{
+        labels:['Gross Exposure','Mitigation','Net Exposure','Available Capital','Solvency Buffer'],
+        datasets:[{
+          data:[g,-m,n,c,Math.max(0,+(c-n).toFixed(1))],
+          backgroundColor:[RD+'50',GR+'50',AM+'50',BL+'50',T+'50'],
+          borderColor:[RD,GR,AM,BL,T], borderWidth:2, borderRadius:4
+        }]
+      },
+      options:{...baseOpts(null,v=>'₦'+Math.abs(v).toFixed(1)+'B'), plugins:{legend:{display:false}}}
+    });
+  }
+
+  function setRisk(s,el){
+    document.querySelectorAll('#proj-pipeline .ctrl-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active'); initRisk(s);
+  }
+
+  function buildMatrix(){
+    const cells=[
+      {l:'low'},{l:'low'},{l:'low'},{l:'low'},{l:'med',t:'Cmp'},
+      {l:'low'},{l:'low'},{l:'low'},{l:'med',t:'Crd'},{l:'high',t:'Mkt'},
+      {l:'low'},{l:'low'},{l:'med',t:'Liq'},{l:'med',t:'Ops'},{l:'high',t:'Und'},
+      {l:'low'},{l:'med',t:'Ops'},{l:'med'},{l:'high',t:'Crd'},{l:'critical',t:'Mkt'},
+      {l:'med',t:'Reg'},{l:'high',t:'Ops'},{l:'high',t:'Mkt'},{l:'critical',t:'Liq'},{l:'critical',t:'Und'},
+    ].reverse();
+    const mx=document.getElementById('riskMx'); mx.innerHTML='';
+    cells.forEach(c=>{ const d=document.createElement('div'); d.className='risk-cell risk-'+c.l; d.textContent=c.t||''; d.title=c.t?c.t+' — '+c.l:''; mx.appendChild(d); });
+  }
+
+  // ── PROJECT 2 ──
+  const fViews={
+    funnel:{title:'// acquisition_funnel.sql — policy stage conversion',labels:['Leads','Quoted','Applied','Underwritten','Bound','Active Policy'],data:[1000,640,420,310,240,198]},
+    retention:{title:'// retention_cohorts.py — monthly cohort retention (%)'},
+    revenue:{title:'// revenue_concentration.sql — GWP by product line',labels:['Motor','Property','Marine','Life','Engineering','Misc'],data:[34,24,16,12,8,6]}
+  };
+
+  function initFunnel(v){
+    dc('funnelC');
+    document.getElementById('funnelTitle').textContent=fViews[v].title;
+    if(v==='funnel'){
+      CI['funnelC']=new Chart(document.getElementById('funnelC'),{
+        type:'bar',
+        data:{labels:fViews.funnel.labels,datasets:[{data:fViews.funnel.data,backgroundColor:T+'45',borderColor:T,borderWidth:2,borderRadius:5}]},
+        options:{...baseOpts(null,v=>v.toLocaleString()), plugins:{legend:{display:false}}}
+      });
+    } else if(v==='retention'){
+      const mo=['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11'];
+      CI['funnelC']=new Chart(document.getElementById('funnelC'),{
+        type:'line',
+        data:{labels:mo,datasets:[
+          {label:'2023 Q1',data:[100,88,81,76,72,69,67,65,64,63,62,62],borderColor:T,backgroundColor:T+'18',fill:false,tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:T},
+          {label:'2023 Q3',data:[100,85,78,73,70,67,65,63,62,61,60,60],borderColor:AM,backgroundColor:AM+'18',fill:false,tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:AM},
+          {label:'2024 Q1',data:[100,90,84,80,77,74,72,71,70,69,69,69],borderColor:BL,backgroundColor:BL+'18',fill:false,tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:BL}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:true,position:'bottom',labels:{color:MU,font:MF,boxWidth:12}}},
+          scales:{x:{grid:{color:BD},ticks:{color:MU,font:MF}},y:{min:50,max:105,grid:{color:BD},ticks:{color:MU,font:MF,callback:v=>v+'%'}}}
+        }
+      });
+    } else {
+      CI['funnelC']=new Chart(document.getElementById('funnelC'),{
+        type:'doughnut',
+        data:{labels:fViews.revenue.labels,datasets:[{data:fViews.revenue.data,backgroundColor:[T,BL,AM,GR,RD,MU],borderWidth:2,borderColor:S}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:true,position:'bottom',labels:{color:MU,font:MF,boxWidth:12}}}}
+      });
+    }
+  }
+
+  function setFunnel(v,el){
+    document.querySelectorAll('#proj-product .ctrl-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active'); initFunnel(v);
+  }
+
+  function initSeg(){
+    dc('segC');
+    CI['segC']=new Chart(document.getElementById('segC'),{
+      type:'doughnut',
+      data:{labels:['Corporate','SME','Retail','High-Net-Worth'],datasets:[{data:[38,28,22,12],backgroundColor:[T+'cc',AM+'cc',BL+'cc',GR+'cc'],borderWidth:2,borderColor:S}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:true,position:'bottom',labels:{color:MU,font:MF,boxWidth:12}}}}
+    });
+  }
+
+  function initGwp(){
+    dc('gwpC');
+    const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    CI['gwpC']=new Chart(document.getElementById('gwpC'),{
+      type:'line',
+      data:{labels:mo,datasets:[{data:[110,118,124,130,127,138,145,153,148,162,170,180],borderColor:T,backgroundColor:T+'18',fill:true,tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:T}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{grid:{display:false},ticks:{color:MU,font:MF}},y:{grid:{color:BD},ticks:{color:MU,font:MF,callback:v=>'₦'+v+'M'}}}
+      }
+    });
+  }
+
+  // ── PROJECT 3 ──
+  const opsD={
+    all:{labels:['Report TAT','Data Processing','Team Productivity','Onboarding Time','Risk Filing','GAP Analysis'],before:[100,100,100,100,100,100],after:[74,80,85,82,76,72]},
+    reporting:{labels:['Report TAT','Filing Turnaround','Dashboard Build'],before:[100,100,100],after:[74,76,68]},
+    risk:{labels:['Risk Filing','ORSA Prep','GAP Analysis','IFRS17 Reports'],before:[100,100,100,100],after:[76,78,72,80]},
+    people:{labels:['Onboarding Time','Productivity','Knowledge Transfer','Cross-team Align'],before:[100,100,100,100],after:[82,85,79,84]}
+  };
+
+  function initOpsCharts(ws){
+    const d=opsD[ws];
+    dc('opsBarC');
+    CI['opsBarC']=new Chart(document.getElementById('opsBarC'),{
+      type:'bar',
+      data:{labels:d.labels,datasets:[
+        {label:'Baseline (100)',data:d.before,backgroundColor:MU+'40',borderColor:MU,borderWidth:2,borderRadius:4},
+        {label:'Post-intervention',data:d.after,backgroundColor:T+'50',borderColor:T,borderWidth:2,borderRadius:4}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,position:'bottom',labels:{color:MU,font:MF,boxWidth:12}}},
+        scales:{x:{grid:{display:false},ticks:{color:MU,font:MF}},y:{min:0,max:115,grid:{color:BD},ticks:{color:MU,font:MF,callback:v=>v+'%'}}}
+      }
+    });
+
+    dc('opsLineC');
+    const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    CI['opsLineC']=new Chart(document.getElementById('opsLineC'),{
+      type:'line',
+      data:{labels:mo,datasets:[{data:mo.map((_,i)=>Math.round(120*(i+1)+Math.pow(i,1.3)*22)),borderColor:AM,backgroundColor:AM+'18',fill:true,tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:AM}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{grid:{display:false},ticks:{color:MU,font:MF}},y:{grid:{color:BD},ticks:{color:MU,font:MF,callback:v=>v+'h'}}}
+      }
+    });
+
+    dc('opsRoiC');
+    CI['opsRoiC']=new Chart(document.getElementById('opsRoiC'),{
+      type:'doughnut',
+      data:{labels:['VBA Automation','Process Re-eng','Training & KT','Risk Data Ops'],datasets:[{data:[42,28,18,12],backgroundColor:[T+'cc',BL+'cc',AM+'cc',GR+'cc'],borderWidth:2,borderColor:S}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:true,position:'bottom',labels:{color:MU,font:MF,boxWidth:12}}}}
+    });
+  }
+
+  function setOps(ws,el){
+    document.querySelectorAll('#proj-ops .ctrl-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active'); initOpsCharts(ws);
+  }
+
+  // ── TAB SWITCH ──
+  function switchProj(id,el){
+    document.querySelectorAll('.proj-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.proj-panel').forEach(p=>p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('proj-'+id).classList.add('active');
+    // re-init charts for the newly visible panel
+    if(id==='pipeline') initRisk('base');
+    else if(id==='product'){ initFunnel('funnel'); initSeg(); initGwp(); }
+    else if(id==='ops') initOpsCharts('all');
+  }
+
+  function handleSubmit(){
+    const name=document.querySelector('input[placeholder="Your name"]').value;
+    const subj=document.querySelector('input[placeholder="Data Analyst Opportunity"]').value;
+    const msg=document.querySelector('textarea').value;
+    if(!name&&!msg){alert('Please fill in name and message.');return;}
+    window.location.href='mailto:quadribalogun70@gmail.com?subject='+encodeURIComponent(subj||'Portfolio Enquiry')+'&body='+encodeURIComponent('From: '+name+'\n\n'+msg);
+  }
+
+  // INIT on load
+  window.addEventListener('load',()=>{
+    buildMatrix();
+    initRisk('base');
+    initFunnel('funnel');
+    initSeg();
+    initGwp();
+    initOpsCharts('all');
+  });
+</script>
+</body>
+</html>
